@@ -58,23 +58,31 @@
 					dropBox.addEventListener('drop', function(e){
 						e.preventDefault();
 						
-						a_counter += 1;
-
+						a_counter+=1;
 						$('#playlist-player div').not("[data-connected-lists-index=a_counter]").addClass("hide");
-
+						
 						var drop = models.Playlist.fromURI(e.dataTransfer.getData('text'));
-						this.classList.remove('over');
 
+						this.classList.remove('over');
+						
 						var successMessage = document.createElement('p');
-						successMessage.innerHTML = 'Playlist successfully dropped: ' + drop.Playlist;
+						successMessage.innerHTML = 'Playlist successfully dropped: ' + drop.uri;
 						this.appendChild(successMessage);
 
-						console.log(a_counter);
 
+						drop.load('tracks').done(function() {
+							var a_collection = drop.tracks;
+							var a_list = List.forCollection(a_collection);
+							document.getElementById('playlist-player').appendChild(a_list.node);
 
-						var list = List.forPlaylist(drop);
-						document.getElementById('playlist-player').appendChild(list.node);
-						list.init();
+							a_list.init();
+						});
+
+						// var list = List.forPlaylist(drop);
+						// document.getElementById('playlist-player').appendChild(list.node);
+						// list.init();
+						// l	ist.item.shuffle();
+						//console.log(list.item);
 					}, false);
 				});
 			</script>
@@ -126,7 +134,7 @@
 						}, false);
 					});
 				</script> -->
-	
+	<!-- 
 
 
 				<h1>Spotify Apps API Tutorials</h1>
@@ -161,7 +169,7 @@
 				<h2>Facebook</h2>
 				<ul>
 					<li><a href="spotify:app:api-tutorial:facebook:authenticate">Authenticate a user with Facebook</a></li>
-				</ul>
+				</ul> -->
 
 			</div>
 		</div>
