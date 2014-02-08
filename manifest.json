@@ -14,9 +14,7 @@
     "300x300": "img/icons/icon-300x300.png"
   },
   "AcceptedLinkTypes": [
-    "playlist",
-    "album",
-    "artist"
+    "playlist"
   ],
   "BundleType": "Application",
   "BundleVersion": "0.2",
