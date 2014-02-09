@@ -26,16 +26,19 @@
 
 			<div class="html-snippet" data-container="html">
 				<div id="playlist-player"></div>
+				<span id="timer"></span>
 			</div>
 
 			<script type="script/snippet" data-container="js">
 				require(['$api/models', '$views/list#List'], function(models, List) {
 
-					var a_counter = 0;
+					var a_counter = 0,
+						current_duration;
 
 					// Handle drops
 					var dropBox = document.querySelector('#drop-box');
 					var nowPlaying = document.getElementById('currently-playing');
+					var positionTimer = document.getElementById('timer');
 
 					function updateStatus(track) {
 						if (track == null) {
@@ -45,15 +48,28 @@
 						}
 					}
 
-					// update on load
-		            models.player.load('track').done(function(p) {
-		                updateStatus(p.track);
-		            });
+					function updateTimer(position) {
+						console.log(position);
+					}
 
-		            // update on change
-		            models.player.addEventListener('change', function(p) {
-		                updateStatus(p.data.track);
-		            });
+					function playSnapshot(a_snap) {
+						// start song
+						// get duration - 5s
+						// get next song
+						// set timeout
+					}
+
+					// update on load
+					models.player.load('track').done(function(p) {
+						updateStatus(p.track);
+						current_duration = p.track.duration;
+					});
+
+					// update on change
+					models.player.addEventListener('change', function(p) {
+						updateStatus(p.data.track);
+						current_duration = p.data.track.duration;
+					});
 
 					dropBox.addEventListener('dragstart', function(e){
 						e.dataTransfer.setData('text/html', this.innerHTML);
@@ -99,7 +115,7 @@
 							document.getElementById('playlist-player').appendChild(a_list.node);
 
 							a_list.init();
-							models.player.playContext(a_collection);
+							//models.player.playContext(a_collection);
 						});
 					}, false);
 				});
