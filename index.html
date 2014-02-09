@@ -16,9 +16,12 @@
 
 			<div id="html"></div>
 
-			<h3>Live Example</h3>
 			<div class="html-snippet" data-container="html">
-				<div id="drop-box">Drop a playlist here</div>
+				<div id="currently-playing"></div>
+			</div>
+
+			<div class="html-snippet" data-container="html">
+				<div id="drop-box">Drag and drop a playlist here</div>
 			</div>
 
 			<div class="html-snippet" data-container="html">
@@ -32,6 +35,25 @@
 
 					// Handle drops
 					var dropBox = document.querySelector('#drop-box');
+					var nowPlaying = document.getElementById('currently-playing');
+
+					function updateStatus(track) {
+						if (track == null) {
+							nowPlaying.innerHTML = "No track currently playing."
+						} else {
+							nowPlaying.innerHTML = "<b>" + track.name + " (" + track.duration/1000 + " sec.)</b> is currently playing";
+						}
+					}
+
+					// update on load
+		            models.player.load('track').done(function(p) {
+		                updateStatus(p.track);
+		            });
+
+		            // update on change
+		            models.player.addEventListener('change', function(p) {
+		                updateStatus(p.data.track);
+		            });
 
 					dropBox.addEventListener('dragstart', function(e){
 						e.dataTransfer.setData('text/html', this.innerHTML);
@@ -70,106 +92,19 @@
 						this.appendChild(successMessage);
 
 
-						drop.load('tracks').done(function() {
+						drop.load('tracks').done(function(tracks) {
 							var a_collection = drop.tracks;
-							var a_list = List.forCollection(a_collection);
+							//var a_list = List.forCollection(a_collection);
+							var a_list = List.forPlaylist(drop);
 							document.getElementById('playlist-player').appendChild(a_list.node);
 
 							a_list.init();
+							models.player.playContext(a_collection);
 						});
-
-						// var list = List.forPlaylist(drop);
-						// document.getElementById('playlist-player').appendChild(list.node);
-						// list.init();
-						// l	ist.item.shuffle();
-						//console.log(list.item);
 					}, false);
 				});
 			</script>
 
-<!-- 				
-				<h1>Skipper: The advert avoider</h1>
-
-				<div class="html-snippet" data-container="html">
-					<div id="drop-box">Drop a playlist here to use</div>
-				</div>
-
-				<script type="script/snippet" data-container="js">
-					require(['$api/models'], function(models) {
-
-						// var drops_uri_array = [];
-
-						// Handle drops
-						var dropBox = document.querySelector('#drop-box');
-
-						dropBox.addEventListener('dragstart', function(e){
-							e.dataTransfer.setData('text/html', this.innerHTML);
-							e.dataTransfer.effectAllowed = 'copy';
-						}, false);
-
-						dropBox.addEventListener('dragenter', function(e){
-							e.preventDefault();
-							e.dataTransfer.dropEffect = 'copy';
-							this.classList.add('over');
-						}, false);
-
-						dropBox.addEventListener('dragover', function(e){
-							e.preventDefault();
-							e.dataTransfer.dropEffect = 'copy';
-							return false;
-						}, false);
-
-						dropBox.addEventListener('dragleave', function(e){
-							e.preventDefault();
-							this.classList.remove('over');
-						}, false);
-
-						dropBox.addEventListener('drop', function(e){
-							e.preventDefault();
-							var drop = models.Playlist.fromURI(e.dataTransfer.getData('text'));
-							this.classList.remove('over');
-							var successMessage = document.createElement('p');
-							successMessage.innerHTML = 'Playlist successfully dropped: ' + drop.uri;
-							this.appendChild(successMessage);
-						}, false);
-					});
-				</script> -->
-	<!-- 
-
-
-				<h1>Spotify Apps API Tutorials</h1>
-				<h2>Getting started</h2>
-				<ul>
-					<li><a href="spotify:app:api-tutorial:getting-started:manifest">Creating your manifest file</a></li>
-					<li><a href="spotify:app:api-tutorial:getting-started:arguments">Handling arguments, creating pages and navigational tabs</a></li>
-					<li><a href="spotify:app:api-tutorial:getting-started:drag-drop">Dragging and dropping content into an app</a></li>
-				</ul>
-
-				<h2>Playing music</h2>
-				<ul>
-					<li><a href="spotify:app:api-tutorial:playing:play-track">Play a single track</a></li>
-					<li><a href="spotify:app:api-tutorial:playing:play-list-tracks">Play a list of tracks</a></li>
-					<li><a href="spotify:app:api-tutorial:playing:current-track">Get the currently playing track</a></li>
-					<li><a href="spotify:app:api-tutorial:playing:click-to-play">Create a play/pause button with an HTML element</a></li>
-					<li><a href="spotify:app:api-tutorial:playing:skip-track">Skip to the next or previous track</a></li>
-				</ul>
-
-				<h2>Searching</h2>
-				<ul>
-					<li><a href="spotify:app:api-tutorial:search:metadata">Get metadata from an artist, album, track, or playlist</a></li>
-					<li><a href="spotify:app:api-tutorial:search:search">Return metadata with a given search query</a></li>
-				</ul>
-
-				<h2>Interacting with user data</h2>
-				<ul>
-					<li><a href="spotify:app:api-tutorial:user:toplist">Get a user's top tracks</a></li>
-					<li><a href="spotify:app:api-tutorial:user:star-track">Star and unstar a track</a></li>
-				</ul>
-
-				<h2>Facebook</h2>
-				<ul>
-					<li><a href="spotify:app:api-tutorial:facebook:authenticate">Authenticate a user with Facebook</a></li>
-				</ul> -->
 
 			</div>
 		</div>
