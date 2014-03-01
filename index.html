@@ -52,7 +52,7 @@
 						console.log(position);
 					}
 
-					function playSnapshot(a_snap) {
+					function playSong(next_song) {
 						// start song
 						// get duration - 5s
 						// get next song
@@ -109,13 +109,31 @@
 
 
 						drop.load('tracks').done(function(tracks) {
-							var a_collection = drop.tracks;
+							var a_collection = drop.tracks.shuffle();
 							//var a_list = List.forCollection(a_collection);
 							var a_list = List.forPlaylist(drop);
+							console.log(a_list);
 							document.getElementById('playlist-player').appendChild(a_list.node);
-
 							a_list.init();
 							//models.player.playContext(a_collection);
+
+
+							drop.tracks.snapshot()
+								.done(
+									function(snapshot) {
+					
+										for (var i = 0; i < snapshot.length; i++) {
+											var this_track = snapshot.get(i);
+											
+											if (i+1 != snapshot.length) {
+												var next_track = snapshot.get(i+1);
+											}
+											
+											console.log(i + this_track.name);
+											console.log(i+1 + next_track.name);
+										}
+									}
+								);
 						});
 					}, false);
 				});
