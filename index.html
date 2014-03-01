@@ -48,10 +48,6 @@
 						}
 					}
 
-					function updateTimer(position) {
-						console.log(position);
-					}
-
 					// update on load
 					models.player.load('track').done(function(p) {
 						updateStatus(p.track);
@@ -116,6 +112,7 @@
 							// SetTimeout is a non-blocking function, so when executed in a loop it isn't paused
 							// ∴ the loop structure is implemented with a recursive function songLoop which takes
 							// the delay as an argument and calls itself until the tracks run out.
+							
 							drop.tracks.snapshot()
 								.done(
 									function(snapshot) {
