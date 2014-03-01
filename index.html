@@ -52,13 +52,6 @@
 						console.log(position);
 					}
 
-					function playSong(next_song) {
-						// start song
-						// get duration - 5s
-						// get next song
-						// set timeout
-					}
-
 					// update on load
 					models.player.load('track').done(function(p) {
 						updateStatus(p.track);
@@ -121,21 +114,36 @@
 							drop.tracks.snapshot()
 								.done(
 									function(snapshot) {
-					
+										var first_track = snapshot.get(0);
+										playSong( first_track );
+
 										for (var i = 0; i < snapshot.length; i++) {
-											var this_track = snapshot.get(i);
+											var current_track = snapshot.get(i);
+											var next_track = snapshot.get(i+1);
+
+											var current_limit = current_track.duration - 5000;
 											
-											if (i+1 != snapshot.length) {
-												var next_track = snapshot.get(i+1);
-											}
-											
-											console.log(i + this_track.name);
-											console.log(i+1 + next_track.name);
+											console.log(i + current_track.name);
+
+											createTimer( next_track, 5000 );
+											//setTimeout( timeoutWorks, 5000 );
 										}
 									}
 								);
 						});
 					}, false);
+
+					function createTimer( a_track, a_time ) {
+						window.setTimeout( timeoutWorks , a_time )
+					}
+
+					function playSong( a_track ) {
+						models.player.playTrack(a_track);
+					}
+
+					function timeoutWorks() { 
+						console.log("working");
+					}
 				});
 			</script>
 
