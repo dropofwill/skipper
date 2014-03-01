@@ -102,15 +102,20 @@
 
 
 						drop.load('tracks').done(function(tracks) {
+							
+							// Stuff purely for display purpoeses
+							// Using snapshots for playing the songs
+
 							var a_collection = drop.tracks.shuffle();
 							//var a_list = List.forCollection(a_collection);
 							var a_list = List.forPlaylist(drop);
 							console.log(a_list);
 							document.getElementById('playlist-player').appendChild(a_list.node);
 							a_list.init();
-							//models.player.playContext(a_collection);
 
-
+							// SetTimeout is a non-blocking function, so when executed in a loop it isn't paused
+							// ∴ the loop structure is implemented with a recursive function songLoop which takes
+							// the delay as an argument and calls itself until the tracks run out.
 							drop.tracks.snapshot()
 								.done(
 									function(snapshot) {
@@ -141,7 +146,7 @@
 					function playSong( a_track ) {
 						models.player.playTrack(a_track);
 					}
-					
+
 				});
 			</script>
 
