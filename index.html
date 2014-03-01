@@ -115,35 +115,33 @@
 								.done(
 									function(snapshot) {
 										var first_track = snapshot.get(0);
+										var i = 0;
+
 										playSong( first_track );
 
-										for (var i = 0; i < snapshot.length; i++) {
-											var current_track = snapshot.get(i);
-											var next_track = snapshot.get(i+1);
+										function songLoop( duration ) {
+											setTimeout( function () {
+												i++;
 
-											var current_limit = current_track.duration - 5000;
-											
-											console.log(i + current_track.name);
+												if ( i < snapshot.length ) {
+													var next_track = snapshot.get(i);
+													
+													playSong( next_track );
 
-											createTimer( next_track, 5000 );
-											//setTimeout( timeoutWorks, 5000 );
+													songLoop( next_track.duration - 3000 );
+												}
+											}, duration );
 										}
+										songLoop( first_track.duration - 3000 );
 									}
 								);
 						});
 					}, false);
 
-					function createTimer( a_track, a_time ) {
-						window.setTimeout( timeoutWorks , a_time )
-					}
-
 					function playSong( a_track ) {
 						models.player.playTrack(a_track);
 					}
-
-					function timeoutWorks() { 
-						console.log("working");
-					}
+					
 				});
 			</script>
 
