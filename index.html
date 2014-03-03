@@ -101,11 +101,12 @@
 							
 							// Stuff purely for display purpoeses
 							// Using snapshots for playing the songs
-
-							var a_collection = drop.tracks.shuffle();
+							var shuffled_collection = drop.tracks.shuffle();
+							
+							//var shuffled_collection = a_collection.shuffle();
 							//var a_list = List.forCollection(a_collection);
+							
 							var a_list = List.forPlaylist(drop);
-							console.log(a_list);
 							document.getElementById('playlist-player').appendChild(a_list.node);
 							a_list.init();
 
@@ -113,6 +114,19 @@
 							// ∴ the loop structure is implemented with a recursive function songLoop which takes
 							// the delay as an argument and calls itself until the tracks run out.
 							
+
+							drop.tracks.snapshot()
+								.done(
+									function( snapshot ) {
+										console.log( snapshot );
+										for (var i = 0; i < snapshot.length; i++) {
+										   var track = snapshot.get(i);   
+										   console.log(track.name);
+										}
+									}
+								)
+							;
+
 							drop.tracks.snapshot()
 								.done(
 									function(snapshot) {
@@ -137,6 +151,32 @@
 										songLoop( first_track.duration - 3000 );
 									}
 								);
+
+
+							// drop.tracks.snapshot()
+							// 	.done(
+							// 		function(snapshot) {
+							// 			var first_track = snapshot.get(0);
+							// 			var i = 0;
+
+							// 			playSong( first_track );
+
+							// 			function songLoop( duration ) {
+							// 				setTimeout( function () {
+							// 					i++;
+
+							// 					if ( i < snapshot.length ) {
+							// 						var next_track = snapshot.get(i);
+													
+							// 						playSong( next_track );
+
+							// 						songLoop( next_track.duration - 3000 );
+							// 					}
+							// 				}, duration );
+							// 			}
+							// 			songLoop( first_track.duration - 3000 );
+							// 		}
+							// 	);
 						});
 					}, false);
 
