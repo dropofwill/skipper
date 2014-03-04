@@ -129,7 +129,7 @@
 											range_order = shuffleArray( range_order );
 										}
 
-										i = range_order[ 0 ];
+										current_track = range_order[ 0 ];
 										first_track = snapshot.get( current_track );
 
 										playSong( first_track );
@@ -146,7 +146,7 @@
 							current_track++;
 
 							if ( current_track < range_order.length ) {
-								var next_track = snapshot.get( current_track );
+								var next_track = snapshot.get( range_order[ current_track ] );
 								
 								playSong( next_track );
 
