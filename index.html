@@ -147,8 +147,12 @@
 						setTimeout( function () {
 							var next_track;
 							i++;
-							
+
 							if ( i < range_order.length - 1 ) {
+
+								console.log(i, snapshot.get(i).name );
+								console.log( range_order[ i ], snapshot.get( range_order[ i ] ).name );
+
 								next_track = snapshot.get( range_order[ i ] );
 
 								playSong( next_track );
@@ -236,7 +240,6 @@
 					    }
 
 					    return range;
-
 					}
 
 				});
