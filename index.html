@@ -55,17 +55,17 @@
 						}
 					}
 
-					// update on load
-					models.player.load('track').done(function(p) {
-						updateStatus(p.track);
-						current_duration = p.track.duration;
-					});
+					// // update on load
+					// models.player.load('track').done(function(p) {
+					// 	updateStatus(p.track);
+					// 	current_duration = p.track.duration;
+					// });
 
-					// update on change
-					models.player.addEventListener('change', function(p) {
-						updateStatus(p.data.track);
-						current_duration = p.data.track.duration;
-					});
+					// // update on change
+					// models.player.addEventListener('change', function(p) {
+					// 	updateStatus(p.data.track);
+					// 	current_duration = p.data.track.duration;
+					// });
 
 					dropBox.addEventListener('dragstart', function(e){
 						e.dataTransfer.setData('text/html', this.innerHTML);
@@ -136,33 +136,37 @@
 
 										playSong( first_track );
 
-										songLoop( first_track.duration - 3000, i, range_order, snapshot );
+										songLoop( first_track, i, range_order, snapshot );
 									}
 								);
 						});
 					}, false);
 					
 					
-					function songLoop( duration, i, range_order, snapshot ) {
-						setTimeout( function () {
-							var next_track;
-							i++;
+					function songLoop( a_track, i, range_order, snapshot ) {
+						models.player.playTrack( a_track ).done(
+								function() {
+									setTimeout( function () {
+									var next_track;
+									i++;
 
-							if ( i < range_order.length - 1 ) {
+									if ( i < range_order.length - 1 ) {
 
-								console.log( i, snapshot.get(i).name );
-								console.log( range_order[ i ], snapshot.get( range_order[ i ] ).name );
+										console.log( i, snapshot.get(i).name );
+										console.log( range_order[ i ], snapshot.get( range_order[ i ] ).name );
 
-								next_track = snapshot.get( range_order[ i ] );
+										next_track = snapshot.get( range_order[ i ] );
 
-								playSong( next_track );
+										playSong( next_track );
 
-								songLoop( next_track.duration - 3000, i, range_order, snapshot );
+										songLoop( next_track.duration - 3000, i, range_order, snapshot );
+									}
+									else {
+										models.player.stop();
+									}
+								}, a_track.duration );
 							}
-							else {
-								models.player.stop();
-							}
-						}, duration );
+						);
 					}
 
 					function playSong( a_track ) {
