@@ -123,34 +123,37 @@
 								.done(
 									function( snapshot ) {
 										var first_track, current_track, range_order;
+										var i = 0;
+
 										range_order = range( 0, snapshot.length-1, 1 );
 
 										if ( toShuffle() == true ) {
 											range_order = shuffleArray( range_order );
 										}
 
-										current_track = range_order[ 0 ];
+										current_track = range_order[ i ];
 										first_track = snapshot.get( current_track );
 
 										playSong( first_track );
 
-										songLoop( first_track.duration - 3000, current_track, range_order, snapshot );
+										songLoop( first_track.duration - 3000, i, range_order, snapshot );
 									}
 								);
 						});
 					}, false);
 					
 					
-					function songLoop( duration, current_track, range_order, snapshot ) {
+					function songLoop( duration, i, range_order, snapshot ) {
 						setTimeout( function () {
-							current_track++;
+							var next_track;
+							i++;
+							
+							if ( i < range_order.length - 1 ) {
+								next_track = snapshot.get( range_order[ i ] );
 
-							if ( current_track < range_order.length ) {
-								var next_track = snapshot.get( range_order[ current_track ] );
-								
 								playSong( next_track );
 
-								songLoop( next_track.duration - 3000, current_track, range_order );
+								songLoop( next_track.duration - 3000, i, range_order, snapshot );
 							}
 						}, duration );
 					}
