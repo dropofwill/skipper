@@ -18,7 +18,17 @@
 			
 			<form>
 				<input type="radio" name="shuffle" value="shuffled" checked="checked"> Play Shuffled &nbsp;&nbsp;
-				<input type="radio" name="shuffle" value="ordered"> Play in Order
+				<input type="radio" name="shuffle" value="ordered"> Play in Order <br><br>
+				
+				<label for="delay_skipper">How close to the end of the song before we skip it?</label> <br>
+				<select name="delay_skipper" id="delay_skipper">
+					<option value="1000">1 second</option>
+					<option value="2000">2 seconds</option>
+					<option value="3000" selected="selected">3 seconds</option>
+					<option value="4000">4 seconds</option>
+					<option value="5000">5 seconds</option>
+					<option value="6000">6 seconds</option>
+				</select>
 			</form>
 
 			<br>
@@ -40,20 +50,22 @@
 				require(['$api/models', '$views/list#List'], function(models, List) {
 
 					var a_counter = 0,
-						current_duration;
+						current_duration,
+						delay = 3000; // How much time before skip 
 
-					// Handle drops
+					// DOM elements
 					var dropBox = document.querySelector('#drop-box');
 					var nowPlaying = document.getElementById('currently-playing');
 					var positionTimer = document.getElementById('timer');
+					var $delay_skipper = $("#delay_skipper");
 
-					function updateStatus(track) {
-						if (track == null) {
-							nowPlaying.innerHTML = "No track currently playing."
-						} else {
-							nowPlaying.innerHTML = "<b>" + track.name + " (" + track.duration/1000 + " sec.)</b> is currently playing";
-						}
-					}
+					// function updateStatus(track) {
+					// 	if (track == null) {
+					// 		nowPlaying.innerHTML = "No track currently playing."
+					// 	} else {
+					// 		nowPlaying.innerHTML = "<b>" + track.name + " (" + track.duration/1000 + " sec.)</b> is currently playing";
+					// 	}
+					// }
 
 					// // update on load
 					// models.player.load('track').done(function(p) {
@@ -66,6 +78,10 @@
 					// 	updateStatus(p.data.track);
 					// 	current_duration = p.data.track.duration;
 					// });
+
+					$delay_skipper.on('change', function() {
+						delay=$delay_skipper.val();
+					})
 
 					dropBox.addEventListener('dragstart', function(e){
 						e.dataTransfer.setData('text/html', this.innerHTML);
@@ -140,16 +156,15 @@
 					// ∴ the loop structure is implemented with a recursive function songLoop which takes
 					// the delay as an argument and calls itself until the tracks run out.
 
-					
 					function playSong( a_track, i, range_order, snapshot ) {
 						models.player.playTrack( a_track )
 							.done( 
 								function() { 
-									console.log("loaded", a_track.duration - 5000 );
+									console.log("loaded", a_track.duration, delay );
 
 									setTimeout( function () {
 										songLoop( i, range_order, snapshot );
-									}, a_track.duration - 5000 );
+									}, a_track.duration - delay );
 								}
 							)
 							.fail(
