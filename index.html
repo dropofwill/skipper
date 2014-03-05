@@ -144,18 +144,25 @@
 					function playSong( a_track, i, range_order, snapshot ) {
 						models.player.playTrack( a_track )
 							.done( 
-								function () { 
+								function() { 
 									console.log("loaded", a_track.duration - 5000 );
 
 									setTimeout( function () {
-										songLoop( a_track, i, range_order, snapshot );
+										songLoop( i, range_order, snapshot );
 									}, a_track.duration - 5000 );
+								}
+							)
+							.fail(
+								function( track, error ) {
+									console.log( error );
+
+									songLoop( i, range_order, snapshot );
 								}
 							)
 						;
 					}
 					
-					function songLoop( a_track, i, range_order, snapshot ) {
+					function songLoop( i, range_order, snapshot ) {
 						var next_track;
 						i++;
 
