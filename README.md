@@ -1,3 +1,5 @@
+Note: this stopped working when Spotify got rid of player extensions.
+
 # Skipper: A Spotify API Experiment
 
 This is a Spotify App which takes a playlist that a user drags to it and then plays each song skipping right before the track is finished.
